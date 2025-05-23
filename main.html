@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Multi-Site Stock Search</title>
+  <style>
+    body{
+      font-family:Arial,Helvetica,sans-serif;
+      margin:0;
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      background:#f4f4f4;
+    }
+    #searchBox{
+      display:flex;
+      gap:0.5rem;
+    }
+    input{
+      font-size:1.2rem;
+      padding:0.5rem 1rem;
+      width:300px;
+    }
+    button{
+      font-size:1.2rem;
+      padding:0.5rem 1rem;
+      cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Stock Search Launcher</h1>
+  <div id="searchBox">
+    <input id="query" type="text" placeholder="Search term…" autofocus>
+    <button id="go">Search</button>
+  </div>
+
+<script>
+/* Build the four target URLs.
+   Adjust any pattern later if a service changes its query string. */
+const targets = [
+  q => `https://stock.adobe.com/search/video?k=${encodeURIComponent(q)}`,        // Adobe Stock videos :contentReference[oaicite:0]{index=0}
+  q => `https://motionarray.com/browse/stock-video?text=${encodeURIComponent(q)}`, // Motion Array (works today, but MA occasionally tweaks its path)
+  q => `https://commons.wikimedia.org/w/index.php?search=${encodeURIComponent(q)}`, // Wikimedia Commons :contentReference[oaicite:1]{index=1}
+  q => `https://images.nasa.gov/search-results?q=${encodeURIComponent(q)}&media=image,video` // NASA Images & Video
+];
+
+function launch() {
+  const q = document.getElementById('query').value.trim();
+  if (!q) return;
+  targets.forEach(t => window.open(t(q), '_blank'));
+}
+
+document.getElementById('go').addEventListener('click', launch);
+document.getElementById('query').addEventListener('keydown', e => {
+  if (e.key === 'Enter') launch();
+});
+</script>
+</body>
+</html>
